@@ -1,44 +1,47 @@
-import tkinter as tk
-import math
+from tkinter import Canvas, Frame
 
-class Tachometer(tk.Canvas):
-    def __init__(self, master=None, **kwargs):
-        super().__init__(master, **kwargs)
-        self.width = kwargs.get("width", 400)
-        self.height = kwargs.get("height", 400)
-        self.rpm = 0
-        self.create_arc(50, 50, self.width-50, self.height-50, start=30, extent=300, outline="black", width=5)
+class Tachometer(Frame):
+    def __init__(self, parent, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
+        self.configure(width=264, height=42, bg='black')  # Increase height to make room for labels
 
-        # Add labels for RPM display
-        self.rpm_label = self.create_text(self.width // 2, self.height // 2, text="0 RPM", font=("Arial", 24))
+        # Create a canvas for the progress bar
+        self.canvas = Canvas(self, width=264, height=42, bg='black', highlightthickness=0)
+        self.canvas.pack()
 
-        # Draw ticks
+        # Draw the progress bar background
+        self.canvas.create_rectangle(0, 20, 264, 42, outline='', fill='black')  # Adjust Y positions to fit
+
+        # Create tick marks and labels (1 - 5) to represent the RPMs
         self.draw_ticks()
 
     def draw_ticks(self):
-        for i in range(0, 301, 30):
-            angle = math.radians(i + 30)
-            x_start = (self.width // 2) + (self.width // 2 - 50) * math.cos(angle)
-            y_start = (self.height // 2) - (self.height // 2 - 50) * math.sin(angle)
-            x_end = (self.width // 2) + (self.width // 2 - 20) * math.cos(angle)
-            y_end = (self.height // 2) - (self.height // 2 - 20) * math.sin(angle)
-            self.create_line(x_start, y_start, x_end, y_end, fill="black", width=2)
+        tick_positions = [0, 66, 132, 198, 264]  # Positions for tick marks (labels 1 - 5)
+        labels = ['1', '2', '3', '4', '5']
 
-    def update_rpm(self, new_rpm):
-        self.rpm = new_rpm
-        self.itemconfig(self.rpm_label, text=f"{self.rpm} RPM")
-        
-        # Update the needle
-        self.draw_needle()
+        # Add padding for the first and last labels
+        text_offsets = [5, 0, 0, 0, -5]  # Shift the '1' slightly right, '5' slightly left
 
-    def draw_needle(self):
-        # Calculate the needle position
-        angle = math.radians(self.rpm * 300 / 10000)  # Scale RPM to fit the arc
-        x_end = (self.width // 2) + (self.width // 2 - 100) * math.cos(angle)
-        y_end = (self.height // 2) - (self.height // 2 - 100) * math.sin(angle)
+        for i, pos in enumerate(tick_positions):
+            # Draw vertical tick marks on the bar
+            self.canvas.create_line(pos, 20, pos, 42, fill='white', width=2)
 
-        # Clear previous needle
-        self.delete("needle")
+            # Adjust the label positions for padding at the edges
+            label_x = pos + text_offsets[i]
 
-        # Draw new needle
-        self.create_line(self.width // 2, self.height // 2, x_end, y_end, fill="red", width=3, tags="needle")
+            # Draw labels directly on the canvas above the progress bar
+            self.canvas.create_text(label_x, 10, text=labels[i], fill='white', font=("Helvetica", 10))  # Set Y to 10 for above bar
+
+    # Method to update the tachometer progress (takes a value from 0 to 1)
+    def update_progress(self, progress):
+        # Clear previous progress
+        self.canvas.delete("progress")
+
+        # Draw retro-style progress bar with small lines
+        total_lines = 60  # Number of lines in the bar
+        line_spacing = 264 / total_lines  # Space between lines
+        filled_lines = int(progress * total_lines)  # How many lines to fill
+
+        for i in range(filled_lines):
+            start_x = i * line_spacing
+            self.canvas.create_rectangle(start_x, 20, start_x + (line_spacing - 2), 42, fill='yellow', outline='', tags="progress")

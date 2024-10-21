@@ -1,10 +1,12 @@
 from tkinter import *
-from tachometer import Tachometer  # Import the Tachometer class
+from tachometer import Tachometer
+from fuel import FuelMeter
+from textedits import create_shadow_text, create_gradient_text  # Import the functions
 
 # Create the main window
 window = Tk()
 window.geometry("800x480")
-window.title("First Program")
+window.title("Dashboard")
 
 # Create a canvas to hold the background image and tachometer
 canvas = Canvas(window, width=800, height=480, bg='black')
@@ -14,24 +16,28 @@ canvas.pack(fill=BOTH, expand=True)
 img = PhotoImage(file="media/newborder2.png")
 canvas.create_image(0, 0, anchor=NW, image=img)
 
-# Create and place the tachometer
-tachometer = Tachometer(master=canvas, width=400, height=400)
-canvas.create_window(400, 240, window=tachometer)  # Center the tachometer vertically
+# Create the tachometer
+tach = Tachometer(window)
+tach.place(x=274, y=330)  # Adjust x and y as needed to position the tachometer
 
-# Simulate RPM changes for the tachometer
-rpm = 0
+# Create a label for "x1000 R.P.M" with gradient effect
+rpm_colors = ["#FF4500", "#FFD700"]
+create_gradient_text(canvas, "x1000 R.P.M", font=("Helvetica", 12), x=590, y=350, colors=rpm_colors)
 
-def update_rpm():
-    global rpm
-    if rpm >= 10000:
-        rpm = 0
-    else:
-        rpm += 500  # Increment RPM
-    
-    tachometer.update_rpm(rpm)
-    window.after(1000, update_rpm)  # Update every second
+# Create the gear label with shadow effect
+gear_font = ("Impact", 60)
+create_shadow_text(canvas, "3", font=gear_font, x=400, y=220, shadow_offset=(4, 4), shadow_color="black", text_color="blue")
 
-update_rpm()  # Start updating the RPM
+# Create the speed label with shadow effect
+speed_font = ("Helvetica", 24)
+create_shadow_text(canvas, "90 km/h", font=speed_font, x=600, y=240, shadow_offset=(2, 2), shadow_color="black", text_color="blue")
+
+# Create the fuel meter and place it on the left side
+fuel_meter = FuelMeter(window, width=20, height=180, bg_color='black', fg_color='green', border_color='black')
+fuel_meter.place(x=56, y=155)  # Adjust the x and y as needed for the left side of the dashboard
+
+# Start checking the fuel indicator
+fuel_meter.check_fuel_indicator()
 
 # Start the main loop
 window.mainloop()
