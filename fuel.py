@@ -53,7 +53,7 @@ class FuelMeter(Frame):
         self.inner_canvas.coords(self.fuel_bar, 0, self.height - fuel_height, self.width, self.height)
 
         # Turn the indicator on if fuel is below 25%
-        if fuel_level < 0.25:
+        if fuel_level < 0.15:
             self.indicator_label.config(image=self.fuel_indicator_on)
         else:
             self.indicator_label.config(image=self.fuel_indicator_off)
@@ -63,7 +63,7 @@ class FuelMeter(Frame):
         # Update the fuel meter based on the current fuel level
         self.update_fuel(self.fuel_level)
 
-        # Simulate fuel consumption (you can replace this logic with actual fuel level updates)
+        #Simulate fuel consumption (replace this logic with actual fuel level updates)
         self.fuel_level -= 0.01  # Decreasing the fuel level over time
         if self.fuel_level < 0:
             self.fuel_level = 1.0  # Reset to full when it goes below zero for testing purposes
