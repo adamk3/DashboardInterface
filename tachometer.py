@@ -3,27 +3,28 @@ from tkinter import Canvas, Frame
 class Tachometer(Frame):
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
-        self.configure(width=264, height=42, bg='black')  # Increase height to make room for labels
+        self.configure(width=600, height=42, bg='black')  # Set width to 600 pixels and height
 
         # Create a canvas for the progress bar
-        self.canvas = Canvas(self, width=264, height=42, bg='black', highlightthickness=0)
+        self.canvas = Canvas(self, width=600, height=42, bg='black', highlightthickness=0)
         self.canvas.pack()
 
         # Draw the progress bar background
-        self.canvas.create_rectangle(0, 20, 264, 42, outline='', fill='black')  # Adjust Y positions to fit
+        self.canvas.create_rectangle(0, 20, 600, 42, outline='', fill='black')  # Adjust width to 600
 
-        # Create tick marks and labels (1 - 5) to represent the RPMs
+        # Create tick marks and labels (1 - 4) to represent the RPMs (up to 4000)
         self.draw_ticks()
 
-        # Store current RPM progress (from 0 to 1)
+        # Store current RPM progress (from 0 to 1, where 1 is 4000 RPM)
         self.rpm_level = 0.0
 
     def draw_ticks(self):
-        tick_positions = [0, 66, 132, 198, 264]  # Positions for tick marks (labels 1 - 5)
-        labels = ['1', '2', '3', '4', '5']
+        # Tick positions for 600 pixels width representing RPMs up to 4000
+        tick_positions = [0, 150, 300, 450, 600]  # Adjusted positions for tick marks
+        labels = ['0', '1', '2', '3', '4']  # Labels represent thousands of RPMs (0-4)
 
-        # Add padding for the first and last labels
-        text_offsets = [5, 0, 0, 0, -5]  # Shift the '1' slightly right, '5' slightly left
+        # Adjust label positions slightly
+        text_offsets = [5, 0, 0, 0, -5]  # Adjusts for edge placement
 
         for i, pos in enumerate(tick_positions):
             # Draw vertical tick marks on the bar
@@ -38,7 +39,7 @@ class Tachometer(Frame):
     def update_rpm(self, rpm_level):
         """
         Updates the RPM meter based on the rpm_level (a value from 0 to 1).
-        1 represents the maximum RPM (5000), and 0 represents idle RPM (1000).
+        1 represents the maximum RPM (4000), and 0 represents idle RPM (0).
         """
         self.rpm_level = rpm_level  # Store the current RPM level
         self.update_progress(rpm_level)
@@ -49,7 +50,7 @@ class Tachometer(Frame):
         self.canvas.delete("progress")
 
         total_lines = 60  # Number of lines in the bar
-        line_spacing = 264 / total_lines  # Space between lines
+        line_spacing = 600 / total_lines  # Adjust for new width
         filled_lines = int(progress * total_lines)  # How many lines to fill
 
         for i in range(filled_lines):
@@ -63,8 +64,8 @@ class Tachometer(Frame):
         """
         # Simulate RPM increase or decrease (replace this logic with actual RPM data)
         self.rpm_level += 0.01  # Increase RPM level for testing
-        if self.rpm_level > 1:
-            self.rpm_level = 0.0  # Reset to idle when it reaches max RPM
+        if self.rpm_level > 1:  # Limit to 4000 RPMs
+            self.rpm_level = 0.0  # Reset to idle when it reaches max RPM (4000)
 
         # Update the RPM meter with the current level
         self.update_rpm(self.rpm_level)
