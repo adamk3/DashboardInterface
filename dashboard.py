@@ -10,10 +10,10 @@ def create_labels(canvas):
     lap_label = canvas.create_text(600, 290, text="Lap: 1", fill="#8766ed", font=("Helvetica", 24))
 
     # Lap Average
-    lap_avg_label = canvas.create_text(365, 320, text="AVG: ", fill="#8766ed", font=("Helvetica", 12))
+    lap_avg_label = canvas.create_text(365, 200, text="AVG: ", fill="#8766ed", font=("Helvetica", 12))
 
     # Timer/Clock
-    clock_label = canvas.create_text(406, 290, text="00:00:00", fill="#8766ed", font=("Helvetica", 24))
+    clock_label = canvas.create_text(406, 140, text="00:00:00", fill="#8766ed", font=("Helvetica", 64))
 
     return speed_label, lap_label, lap_avg_label, clock_label
 

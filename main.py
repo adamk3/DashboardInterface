@@ -29,7 +29,7 @@ gear_display.update_gear("R", True)
 
 # Fuel, Battery, Throttle, and Brake Meters
 meter_dashboard = Meters(window)  # Instantiate the Dashboard class with meters
-meter_dashboard.place(x=56, y=150)   # Position it within the main window
+meter_dashboard.place(x=45, y=210)   # Position it within the main window
 
 # --- Create Dashboard Labels ---
 
@@ -41,7 +41,7 @@ dashboard.start_timer(canvas, clock_label, window)
 dashboard.setup_mode_toggle(canvas, lap_label, lap_avg_label, clock_label, window)
 
 # x1000 R.P.M label with gradient effect
-create_gradient_text(canvas, "x1000 R.P.M", font=("Helvetica", 10), x=590, y=350, colors=["#FF4500", "#FFD700"])
+create_gradient_text(canvas, "x1000 R.P.M", font=("Helvetica", 10), x=650, y=90, colors=["#FF4500", "#FFD700"])
 
 # --- Initialize the Dashboard ---
 
